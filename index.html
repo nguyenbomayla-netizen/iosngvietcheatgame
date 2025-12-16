@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lux Menu Control By Ng Việt</title>
+
+<style>
+:root{
+  --bg:#05070c;
+  --panel:#0b0f1a;
+  --panel-2:#10162a;
+  --border:#1e2544;
+
+  --cyan:#00eaff;
+  --purple:#8b5cff;
+
+  --text:#e9ecff;
+  --muted:#9aa3d1;
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Arial,sans-serif;
+  background:
+    radial-gradient(circle at top,rgba(0,234,255,.08),transparent 40%),
+    radial-gradient(circle at bottom,rgba(139,92,255,.08),transparent 45%),
+    var(--bg);
+  color:var(--text);
+}
+
+header{
+  padding:22px 16px;
+  text-align:center;
+  background:linear-gradient(180deg,#0b1020,#060913);
+  border-bottom:1px solid var(--border);
+}
+
+header h1{
+  margin:0;
+  font-size:24px;
+  font-weight:800;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.container{max-width:640px;margin:0 auto;padding:16px}
+
+.card,.toggle{position:relative;overflow:hidden;z-index:0}
+
+.card{
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:18px;
+}
+
+.toggle{
+  background:#070b18;
+  border-radius:14px;
+  padding:14px 16px;
+  margin-bottom:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.card::before,.toggle::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  padding:2px;
+  border-radius:inherit;
+  background:linear-gradient(
+    90deg,
+    #ff004c,#ff8c00,#ffee00,
+    #00ff9c,#00eaff,#8b5cff,
+    #ff00ff,#ff004c
+  );
+  background-size:400% 400%;
+  animation:borderFlow 22s linear infinite;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:destination-out;
+          mask-composite:exclude;
+  pointer-events:none;
+}
+
+.card::after{
+  content:'';
+  position:absolute;
+  inset:2px;
+  border-radius:14px;
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));
+}
+
+.toggle::after{
+  content:'';
+  position:absolute;
+  inset:2px;
+  border-radius:12px;
+  background:#070b18;
+}
+
+.card > *, .toggle > *{position:relative;z-index:1}
+
+.card h2{
+  margin:0 0 14px;
+  font-size:16px;
+  font-weight:700;
+}
+
+.input-group{
+  display:flex;
+  gap:10px;
+}
+
+.input-group input{
+  flex:1;
+}
+
+input[type="password"]{
+  background:linear-gradient(180deg,#060a16,#040714);
+  border:1px solid #1c2344;
+  border-radius:12px;
+  padding:13px 14px;
+  color:#fff;
+  font-size:14px;
+  letter-spacing:.6px;
+  outline:none;
+  transition:.25s;
+}
+
+input::placeholder{color:#7f88b5}
+
+input:focus{
+  border-color:var(--cyan);
+  box-shadow:
+    0 0 0 1px rgba(0,234,255,.35),
+    0 0 14px rgba(0,234,255,.35);
+}
+
+.note{
+  margin-top:10px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+button{
+  border:none;
+  border-radius:12px;
+  padding:13px 18px;
+  font-size:14px;
+  font-weight:700;
+  color:#fff;
+  cursor:pointer;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+}
+
+button:active{transform:scale(.96)}
+
+.switch{
+  width:52px;height:28px;border-radius:20px;
+  background:#1c2244;position:relative;
+}
+.switch::after{
+  content:'';
+  position:absolute;top:3px;left:3px;
+  width:22px;height:22px;border-radius:50%;
+  background:#fff;transition:.25s;
+}
+.switch.on{background:linear-gradient(90deg,var(--cyan),var(--purple))}
+.switch.on::after{left:27px}
+
+@keyframes borderFlow{
+  0%{background-position:0% 50%}
+  25%{background-position:100% 50%}
+  50%{background-position:100% 100%}
+  75%{background-position:0% 100%}
+  100%{background-position:0% 50%}
+}
+input[type="range"]{
+  -webkit-appearance:none;
+  width:100%;
+  height:10px;
+  border-radius:10px;
+  background:linear-gradient(
+    90deg,
+    var(--cyan),
+    var(--purple)
+  );
+  outline:none;
+  cursor:pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:#fff;
+  border:3px solid var(--cyan);
+  box-shadow:
+    0 0 10px rgba(0,234,255,.8),
+    0 0 20px rgba(139,92,255,.6);
+  transition:.2s;
+}
+
+input[type="range"]:active::-webkit-slider-thumb{
+  transform:scale(1.15);
+}
+
+input[type="range"]::-moz-range-thumb{
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:#fff;
+  border:3px solid var(--cyan);
+  box-shadow:
+    0 0 10px rgba(0,234,255,.8),
+    0 0 20px rgba(139,92,255,.6);
+}
+
+input[type="range"]::-moz-range-track{
+  height:10px;
+  border-radius:10px;
+  background:linear-gradient(
+    90deg,
+    var(--cyan),
+    var(--purple)
+  );
+}
+a.toggle{
+  text-decoration:none;
+  color:var(--text);
+  cursor:pointer;
+}
+
+a.toggle span{
+  font-weight:600;
+  font-size:14px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+a.toggle b{
+  font-size:20px;
+  color:var(--muted);
+  transition:.25s;
+}
+
+a.toggle:hover{
+  background:linear-gradient(
+    180deg,
+    rgba(0,234,255,.08),
+    rgba(139,92,255,.08)
+  );
+}
+
+a.toggle:hover b{
+  color:var(--cyan);
+  transform:translateX(4px);
+}
+
+a.toggle:active{
+  transform:scale(.97);
+}
+
+#applyBtn{
+  width:100%;
+  margin-top:18px;
+  padding:16px 18px;
+  font-size:15px;
+  font-weight:800;
+  border-radius:16px;
+  letter-spacing:.4px;
+  box-shadow:
+    0 0 18px rgba(0,200,83,.45),
+    inset 0 0 0 1px rgba(255,255,255,.15);
+}
+
+#applyBtn:active{
+  transform:scale(.97);
+}
+
+footer{text-align:center;padding:16px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Lux Menu Control By Ng Việt</h1>
+  <p>HỖ TRỢ KÉO TÂM LIÊN HỆ ADMIN</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+  <h2>🔐 Nhập Mật Khẩu</h2>
+  <div class="input-group">
+    <input type="password" id="pass" placeholder="Nhập mật khẩu sử dụng">
+    <button onclick="checkPass()">XÁC NHẬN</button>
+  </div>
+  <p id="passNote" class="note"></p>
+</div>
+
+<div class="card" id="panel" style="display:none">
+  <h2>🎮 Chức Năng</h2>
+
+  <div class="toggle">
+    <span>🎯 AimLock</span>
+    <div class="switch" onclick="toggle(this,'aimlock')"></div>
+  </div>
+
+  <div class="toggle">
+    <span>🧠 Nhẹ tâm</span>
+    <div class="switch" onclick="toggle(this,'lightaim')"></div>
+  </div>
+
+  <div class="toggle">
+    <span>🔫 Ổn định tâm súng</span>
+    <div class="switch" onclick="toggle(this,'bullet')"></div>
+  </div>
+
+  <div class="toggle">
+    <span>⚡ Tối ưu máy</span>
+    <div class="switch" onclick="toggle(this,'device')"></div>
+  </div>
+
+  <div class="toggle">
+    <span>🌐 Tối ưu mạng</span>
+    <div class="switch" onclick="toggle(this,'network')"></div>
+  </div>
+
+  <div class="toggle">
+    <span>🔥 LuxSensivity</span>
+    <div class="switch" onclick="toggle(this,'luxsensi')"></div>
+  </div>
+
+  <div class="card">
+    <h2>🎚️ Độ nhạy thiết bị / DPI Game</h2>
+    <input type="range" min="1" max="1000" value="450"
+      id="dpiRange" oninput="setDPI(this.value)">
+    <p class="note">Giá trị hiện tại: <b id="dpiValue">1</b></p>
+  </div>
+
+<div class="card">
+  <h2>📂 CONTACTS</h2>
+
+  <a class="toggle" href="https://www.facebook.com/share/17bCfxcn5m/?mibextid=wwXIfr" target="_blank">
+    <span>📘 Facebook</span><b>›</b>
+  </a>
+
+  <a class="toggle" href="https://zalo.me/0987254409" target="_blank">
+    <span>💬 Zalo</span><b>›</b>
+  </a>
+
+  <a class="toggle" href="www.tiktok.com/@nvviet09"_blank">
+    <span>📲 Tiktok</span><b>›</b>
+  </a>
+
+  <a class="toggle" href="https://discord.gg/QEPpMFyM" target="_blank">
+    <span>🌐 Discord</span><b>›</b>
+  </a>
+</div>
+
+<div class="card">
+  <button id="applyBtn"
+    style="background:linear-gradient(135deg,#00c853,#64dd17)"
+    onclick="applyConfig()">
+    ⚙️ ÁP DỤNG LÊN CONFIG DEVICE
+  </button>
+</div>
+
+</div>
+
+</div>
+
+<footer>© 2026 ADMIN Ng Việt dz vcl🗿</footer>
+
+<script>
+const PASSWORDS={
+  "2112009":{type:"Vĩnh viễn",days:99999},
+  "99999999":{type:"30 ngày",days:30},
+  "11111111":{type:"30 ngày",days:30},
+  "88888888":{type:"15 ngày",days:15},
+  "66666666":{type:"15 ngày",days:15},
+  "FormenMember":{type:"7 ngày",days:7},
+  "VauleticMember":{type:"7 ngày",days:7},
+  "Freetest2":{type:"1 ngày",day:1},
+  "Freetest1":{type:"1 ngày",day:1}
+};
+function checkPass(){
+  const p=pass.value.trim(),info=PASSWORDS[p];
+  if(!info){passNote.style.color="#ff5252";passNote.innerText="Sai mật khẩu";return;}
+  const now=Date.now();
+  let exp=localStorage.getItem("expire");
+  if(!exp){
+    exp=now+info.days*86400000;
+    localStorage.setItem("expire",exp);
+    localStorage.setItem("passType",info.type);
+  }
+  if(now>exp){passNote.style.color="#ff5252";passNote.innerText="Mật khẩu đã hết hạn";return;}
+  passNote.style.color="#4caf50";
+  passNote.innerText="Đã kích hoạt ("+localStorage.getItem("passType")+")";
+  panel.style.display="block";
+  loadState();
+}
+
+function toggle(el,key){
+  el.classList.toggle("on");
+  localStorage.setItem(key,el.classList.contains("on"));
+}
+
+function setDPI(v){
+  dpiValue.innerText=v;
+  localStorage.setItem("dpi",v);
+}
+
+function applyConfig(){
+  const keys=["aimlock","lightaim","bullet","device","network","luxsensi"];
+  let f={};
+  keys.forEach(k=>{if(localStorage.getItem(k)==="true")f[k]=true;});
+  if(!Object.keys(f).length){alert("⚠️ Chưa bật chức năng nào");return;}
+
+  loading.style.display="flex";
+
+  setTimeout(()=>{
+    const cfg={
+      dpi:localStorage.getItem("dpi"),
+      weapon:localStorage.getItem("weapon"),
+      functions:f,
+      time:new Date().toISOString()
+    };
+    localStorage.setItem("lux_config",JSON.stringify(cfg));
+    loading.style.display="none";
+    alert("✅ Đã áp dụng cấu hình thành công");
+  },1800);
+}
+
+function loadState(){
+  document.querySelectorAll(".switch").forEach(sw=>{
+    const k=sw.getAttribute("onclick").match(/'(.*?)'/)[1];
+    if(localStorage.getItem(k)==="true")sw.classList.add("on");
+  });
+  const d=localStorage.getItem("dpi");
+  if(d){dpiRange.value=d;dpiValue.innerText=d;}
+}
+</script>
+<script>
+document.addEventListener("contextmenu",e=>e.preventDefault());
+document.addEventListener("keydown",e=>{
+  if(
+    e.key==="F12" ||
+    (e.ctrlKey && e.shiftKey) ||
+    (e.ctrlKey && e.key==="u")
+  ){
+    e.preventDefault();
+  }
+});
+
+document.addEventListener("visibilitychange",()=>{
+  document.body.style.filter=
+    document.hidden ? "blur(14px)" : "none";
+});
+
+document.querySelectorAll(".toggle").forEach(t=>{
+  t.addEventListener("click",()=>{
+    t.animate(
+      [{transform:"scale(1)"},{transform:"scale(.97)"},{transform:"scale(1)"}],
+      {duration:180}
+    );
+  });
+});
+
+const dpiSlider=document.getElementById("dpiRange");
+if(dpiSlider){
+  const updateSlider=()=>{
+    const val=(dpiSlider.value/dpiSlider.max)*100;
+    dpiSlider.style.background=
+      `linear-gradient(90deg,#00e5ff ${val}%,#333 ${val}%)`;
+  };
+  dpiSlider.addEventListener("input",updateSlider);
+  updateSlider();
+}
+
+const panelEl=document.getElementById("panel");
+if(panelEl){
+  const obs=new MutationObserver(()=>{
+    if(panelEl.style.display==="block"){
+      panelEl.animate(
+        [{opacity:0,transform:"translateY(20px)"},
+         {opacity:1,transform:"none"}],
+        {duration:400,easing:"ease-out"}
+      );
+    }
+  });
+  obs.observe(panelEl,{attributes:true,attributeFilter:["style"]});
+}
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"a51de539ef224ff595aac92d9f4fcb15","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<div id="loading" style="display:none">
+  <div class="loader-card">
+    <div class="spinner"></div>
+    <p>Đang áp dụng cấu hình…</p>
+  </div>
+</div>
+
+<style>
+#loading{
+  position:fixed;
+  inset:0;
+  background:rgba(10,15,35,.88);
+  backdrop-filter:blur(10px);
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.loader-card{
+  background:linear-gradient(180deg,#1b2355,#141a3a);
+  padding:26px;
+  border-radius:18px;
+  text-align:center;
+  box-shadow:0 0 30px rgba(0,229,255,.45);
+}
+
+.spinner{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  border:4px solid rgba(255,255,255,.15);
+  border-top:4px solid #00e5ff;
+  animation:spin 1s linear infinite;
+  margin:0 auto 14px;
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</body>
+</html>
